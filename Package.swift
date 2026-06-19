@@ -1,0 +1,37 @@
+// swift-tools-version: 6.0
+import PackageDescription
+
+let package = Package(
+    name: "PayPay",
+    platforms: [
+        .iOS(.v16),
+        .macOS(.v13)
+    ],
+    products: [
+        .library(
+            name: "PayPay",
+            targets: ["Domain", "Application", "Infrastructure"]
+        ),
+    ],
+    targets: [
+        .target(
+            name: "Domain",
+            path: "Sources/Domain"
+        ),
+        .target(
+            name: "Application",
+            dependencies: ["Domain"],
+            path: "Sources/Application"
+        ),
+        .target(
+            name: "Infrastructure",
+            dependencies: ["Application"],
+            path: "Sources/Infrastructure"
+        ),
+        .testTarget(
+            name: "DomainTests",
+            dependencies: ["Domain", "Application", "Infrastructure"],
+            path: "Tests"
+        ),
+    ]
+)
