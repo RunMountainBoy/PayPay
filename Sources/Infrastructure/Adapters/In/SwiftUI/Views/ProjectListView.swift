@@ -128,7 +128,7 @@ public struct ProjectListView: View {
                 addExpenseUseCase: useCase,
                 calculateBalancesUseCase: useCase
             )
-            ProjectDetailView(viewModel: detailVM)
+            ProjectDashboardView(viewModel: detailVM)
         }
     }
 }
