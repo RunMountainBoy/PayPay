@@ -23,10 +23,19 @@ jobs:
       run: |
         xcodebuild -version
 
+    - name: Compilar paquete Swift
+      run: swift build
+
+    - name: Ejecutar tests
+      run: swift test
+
+    - name: Generar proyecto Xcode
+      run: swift package generate-xcodeproj
+
     - name: Compilar el proyecto de iOS
       run: |
         xcodebuild -project "PayPay.xcodeproj" \
-                   -scheme "PayPay" \
+                   -scheme "PayPay-Package" \
                    -sdk iphoneos \
                    -configuration Release \
                    -derivedDataPath build \
