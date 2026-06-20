@@ -1,0 +1,39 @@
+name: Compilar App de iOS
+
+# El proceso se activará cada vez que hagas un 'push' (subas cambios) a la rama main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # Usamos una máquina virtual de macOS oficial de GitHub
+    runs-on: macos-latest
+
+    steps:
+    # 1. Descarga el código de tu repositorio en el servidor de GitHub
+    - name: Descargar repositorio
+      uses: actions/checkout@v4
+
+    # 2. Selecciona la versión de Xcode instalada en el servidor virtual
+    - name: Configurar versión de Xcode
+      run: |
+        sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+        xcodebuild -version
+
+    # 3. Compila el proyecto (Cambia 'TuProyecto' por el nombre real de tu archivo .xcodeproj)
+    - name: Compilar el proyecto de iOS
+      run: |
+        xcodebuild -project "PayPay.xcodeproj" \
+                   -scheme "PayPay" \
+                   -sdk iphoneos \
+                   -configuration Release \
+                   CODE_SIGNING_ALLOWED=NO \
+                   clean build
+
+    # 4. Guarda el resultado para que puedas descargarlo desde la web de GitHub
+    - name: Subir ejecutable compilado
+      uses: actions/upload-artifact@v4
+      with:
+        name: App-Compilada
+        path: build/Release-iphoneos/
