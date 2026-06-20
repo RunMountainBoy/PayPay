@@ -54,103 +54,7 @@ public struct AddExpenseView: View {
                     .ignoresSafeArea()
 
                 ScrollView {
-                    VStack(spacing: 20) {
-                        // Description Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Descripción")
-                                .font(.caption.bold())
-                                .foregroundColor(.gray)
-                            TextField("Ej. Cena Italiana", text: $description)
-                                .padding()
-                                .background(Color.white.opacity(0.05))
-                                .cornerRadius(12)
-                                .foregroundColor(.white)
-                        }
-
-                        // Amount Field
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Monto ($)")
-                                .font(.caption.bold())
-                                .foregroundColor(.gray)
-                            HStack {
-                                Text("$")
-                                    .foregroundColor(cyanNeon)
-                                    .bold()
-                                TextField("0.00", text: $amountString)
-                                    .keyboardType(.decimalPad)
-                                    .foregroundColor(cyanNeon)
-                                    .font(.system(.body, design: .monospaced))
-                                    .monospacedDigit()
-                            }
-                            .padding()
-                            .background(Color.white.opacity(0.05))
-                            .cornerRadius(12)
-                        }
-
-                        // Paid By Selector
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Pagado por")
-                                .font(.caption.bold())
-                                .foregroundColor(.gray)
-                            
-                            Picker("Quién pagó", selection: $paidById) {
-                                ForEach(participants) { participant in
-                                    Text(participant.name).tag(participant.id)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            .padding(.horizontal)
-                            .frame(height: 50)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.white.opacity(0.05))
-                            .cornerRadius(12)
-                            .accentColor(cyanNeon)
-                        }
-
-                        // Split Options
-                        Toggle(isOn: $splitEqually) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Dividir equitativamente")
-                                    .foregroundColor(.white)
-                                    .bold()
-                                Text("El gasto se dividirá en partes iguales entre todos")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                        .toggleStyle(SwitchToggleStyle(onColor: greenNeon))
-                        .padding()
-                        .background(Color.white.opacity(0.05))
-                        .cornerRadius(12)
-
-                        // Custom Splits selection
-                        if !splitEqually {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text("Dividir entre:")
-                                    .font(.caption.bold())
-                                    .foregroundColor(.gray)
-
-                                ForEach(participants) { participant in
-                                    Toggle(participant.name, isOn: Binding(
-                                        get: { selectedSplitParticipants.contains(participant.id) },
-                                        set: { isSelected in
-                                            if isSelected {
-                                                selectedSplitParticipants.insert(participant.id)
-                                            } else {
-                                                selectedSplitParticipants.remove(participant.id)
-                                            }
-                                        }
-                                    ))
-                                    .toggleStyle(CheckboxToggleStyle(activeColor: cyanNeon))
-                                    .padding(.vertical, 4)
-                                }
-                            }
-                            .padding()
-                            .background(Color.white.opacity(0.05))
-                            .cornerRadius(12)
-                        }
-                    }
-                    .padding()
+                    formContent
                 }
             }
             .navigationTitle("Añadir Gasto")
@@ -159,25 +63,144 @@ public struct AddExpenseView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(slateDark, for: .navigationBar)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") {
-                        dismiss()
-                    }
-                    .foregroundColor(.white)
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Añadir") {
-                        addExpense()
-                    }
+                toolbarItems
+            }
+        }
+    }
+
+    private var formContent: some View {
+        VStack(spacing: 20) {
+            descriptionField
+            amountField
+            paidBySelector
+            splitOptions
+        }
+        .padding()
+    }
+
+    private var descriptionField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Descripción")
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+            TextField("Ej. Cena Italiana", text: $description)
+                .padding()
+                .background(Color.white.opacity(0.05))
+                .cornerRadius(12)
+                .foregroundColor(.white)
+        }
+    }
+
+    private var amountField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Monto ($)")
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+            HStack {
+                Text("$")
+                    .foregroundColor(cyanNeon)
                     .bold()
-                    .foregroundColor(greenNeon)
-                    .disabled(
-                        description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-                        Double(amountString) == nil ||
-                        (!splitEqually && selectedSplitParticipants.isEmpty)
-                    )
+                TextField("0.00", text: $amountString)
+                    .keyboardType(.decimalPad)
+                    .foregroundColor(cyanNeon)
+                    .font(.system(.body, design: .monospaced))
+                    .monospacedDigit()
+            }
+            .padding()
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+        }
+    }
+
+    private var paidBySelector: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Pagado por")
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+            
+            Picker("Quién pagó", selection: $paidById) {
+                ForEach(participants) { participant in
+                    Text(participant.name).tag(participant.id)
                 }
             }
+            .pickerStyle(.menu)
+            .padding(.horizontal)
+            .frame(height: 50)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+            .accentColor(cyanNeon)
+        }
+    }
+
+    private var splitOptions: some View {
+        VStack(spacing: 20) {
+            Toggle(isOn: $splitEqually) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Dividir equitativamente")
+                        .foregroundColor(.white)
+                        .bold()
+                    Text("El gasto se dividirá en partes iguales entre todos")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+            .toggleStyle(SwitchToggleStyle(onColor: greenNeon))
+            .padding()
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(12)
+
+            if !splitEqually {
+                customSplits
+            }
+        }
+    }
+
+    private var customSplits: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Dividir entre:")
+                .font(.caption.bold())
+                .foregroundColor(.gray)
+
+            ForEach(participants) { participant in
+                Toggle(participant.name, isOn: Binding(
+                    get: { selectedSplitParticipants.contains(participant.id) },
+                    set: { isSelected in
+                        if isSelected {
+                            selectedSplitParticipants.insert(participant.id)
+                        } else {
+                            selectedSplitParticipants.remove(participant.id)
+                        }
+                    }
+                ))
+                .toggleStyle(CheckboxToggleStyle(activeColor: cyanNeon))
+                .padding(.vertical, 4)
+            }
+        }
+        .padding()
+        .background(Color.white.opacity(0.05))
+        .cornerRadius(12)
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarItems: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Cancelar") {
+                dismiss()
+            }
+            .foregroundColor(.white)
+        }
+        ToolbarItem(placement: .confirmationAction) {
+            Button("Añadir") {
+                addExpense()
+            }
+            .bold()
+            .foregroundColor(greenNeon)
+            .disabled(
+                description.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                Double(amountString) == nil ||
+                (!splitEqually && selectedSplitParticipants.isEmpty)
+            )
         }
     }
 
