@@ -4,7 +4,7 @@ import Domain
 import Application
 
 @MainActor
-public final class ProjectDetailViewModel: ObservableObject {
+public final class ProjectViewModel: ObservableObject {
     @Published public var project: Project
     @Published public var balances: [String: Double] = [:]
     @Published public var simplifiedTransactions: [Transaction] = []
@@ -22,6 +22,18 @@ public final class ProjectDetailViewModel: ObservableObject {
         self.project = project
         self.addExpenseUseCase = addExpenseUseCase
         self.calculateBalancesUseCase = calculateBalancesUseCase
+    }
+
+    /// Convenience initializer to initialize with repositories and services directly
+    public init(
+        project: Project,
+        repository: ProjectRepositoryProtocol,
+        simplifier: DebtSimplifier
+    ) {
+        self.project = project
+        let useCase = ExpenseUseCaseImpl(projectRepository: repository, debtSimplifier: simplifier)
+        self.addExpenseUseCase = useCase
+        self.calculateBalancesUseCase = useCase
     }
 
     public func loadBalancesAndTransactions() {

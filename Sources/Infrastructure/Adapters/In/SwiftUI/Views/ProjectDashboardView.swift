@@ -23,7 +23,7 @@ extension View {
 }
 
 public struct ProjectDashboardView: View {
-    @StateObject private var viewModel: ProjectDetailViewModel
+    @StateObject private var viewModel: ProjectViewModel
     @State private var selectedCurrentUser: String = ""
     @State private var showingAddExpenseSheet = false
 
@@ -33,7 +33,7 @@ public struct ProjectDashboardView: View {
     private let greenNeon = Color(red: 74/255, green: 222/255, blue: 128/255)
     private let redNeon = Color(red: 248/255, green: 113/255, blue: 113/255)
 
-    public init(viewModel: ProjectDetailViewModel) {
+    public init(viewModel: ProjectViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
