@@ -4,23 +4,55 @@ import Application
 
 @main
 public struct ExpensesApp: App {
-    private let projectListVM: ProjectListViewModel
+    // Singletons in memory during execution
+    private let projectRepository = InMemoryProjectRepository()
+    private let debtSimplifier = DebtSimplifier()
 
     public init() {
-        let projectRepository = InMemoryProjectRepository()
-        let simplifier = DebtSimplifier()
-        
-        let manageProjectUseCase = ManageProjectUseCaseImpl(projectRepository: projectRepository)
-        
-        self.projectListVM = ProjectListViewModel(
-            listProjectsUseCase: manageProjectUseCase,
-            createProjectUseCase: manageProjectUseCase
-        )
+        let mockProject = Self.createMockProject()
+        // Seed the repository with the mock project on startup
+        Task {
+            try? await projectRepository.saveProject(mockProject)
+        }
     }
 
     public var body: some Scene {
         WindowGroup {
-            ProjectListView(viewModel: projectListVM)
+            let initialProject = Self.createMockProject()
+            ProjectDashboardView(viewModel: ProjectViewModel(
+                project: initialProject,
+                repository: projectRepository,
+                simplifier: debtSimplifier
+            ))
+            .preferredColorScheme(.dark) // Force dark mode for 'Neo-Finance' style
         }
+    }
+
+    // Helper to generate a default mock project for demo and testing purposes
+    private static func createMockProject() -> Project {
+        let alice = Participant(id: "A", name: "Alice", email: "alice@example.com")
+        let bob = Participant(id: "B", name: "Bob", email: "bob@example.com")
+        let charlie = Participant(id: "C", name: "Charlie", email: "charlie@example.com")
+        
+        let expense1 = Expense.splitEqually(
+            description: "Cena de Bienvenida",
+            amount: 90.0,
+            paidBy: "A",
+            participants: ["A", "B", "C"]
+        )
+        
+        let expense2 = Expense.splitEqually(
+            description: "Boletos de Tren",
+            amount: 120.0,
+            paidBy: "B",
+            participants: ["A", "B", "C"]
+        )
+
+        return Project(
+            id: "default-project-id",
+            name: "Viaje a Europa",
+            participants: [alice, bob, charlie],
+            expenses: [expense1, expense2]
+        )
     }
 }

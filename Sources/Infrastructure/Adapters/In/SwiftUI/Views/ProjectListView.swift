@@ -123,7 +123,7 @@ public struct ProjectListView: View {
             let repo = InMemoryProjectRepository()
             let simplifier = DebtSimplifier()
             let useCase = ExpenseUseCaseImpl(projectRepository: repo, debtSimplifier: simplifier)
-            let detailVM = ProjectDetailViewModel(
+            let detailVM = ProjectViewModel(
                 project: project,
                 addExpenseUseCase: useCase,
                 calculateBalancesUseCase: useCase
