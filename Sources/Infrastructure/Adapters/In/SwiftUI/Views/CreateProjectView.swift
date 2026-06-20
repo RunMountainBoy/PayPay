@@ -17,11 +17,13 @@ public struct CreateProjectView: View {
     public var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Project Info")) {
+                Section {
                     TextField("Project Name (e.g. Europe Trip)", text: $projectName)
+                } header: {
+                    Text("Project Info")
                 }
 
-                Section(header: Text("Add Participant")) {
+                Section {
                     TextField("Name", text: $participantName)
                     TextField("Email", text: $participantEmail)
                         .keyboardType(.emailAddress)
@@ -37,10 +39,12 @@ public struct CreateProjectView: View {
                         }
                     }
                     .disabled(participantName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                } header: {
+                    Text("Add Participant")
                 }
 
                 if !participants.isEmpty {
-                    Section(header: Text("Participants List (\(participants.count))")) {
+                    Section {
                         ForEach(participants) { participant in
                             HStack {
                                 VStack(alignment: .leading) {
@@ -61,6 +65,8 @@ public struct CreateProjectView: View {
                                 }
                             }
                         }
+                    } header: {
+                        Text("Participants List (\(participants.count))")
                     }
                 }
             }
