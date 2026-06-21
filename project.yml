@@ -10,13 +10,39 @@ options:
   minimumXcodeGenVersion: "2.0.0"
 
 targets:
+  Domain:
+    type: framework
+    platform: iOS
+    sources:
+      - Sources/Domain
+
+  Application:
+    type: framework
+    platform: iOS
+    sources:
+      - Sources/Application
+    dependencies:
+      - target: Domain
+
+  Infrastructure:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/Infrastructure
+        excludes:
+          - App
+          - Adapters/In/SwiftUI
+    dependencies:
+      - target: Application
+
   PayPay:
     type: application
     platform: iOS
     sources:
-      - Sources/Domain
-      - Sources/Application
-      - Sources/Infrastructure
+      - Sources/Infrastructure/App
+      - Sources/Infrastructure/Adapters/In/SwiftUI
+    dependencies:
+      - target: Infrastructure
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.paypay.app
       CODE_SIGN_STYLE: Automatic
@@ -56,7 +82,9 @@ targets:
     sources:
       - Tests
     dependencies:
-      - target: PayPay
+      - target: Domain
+      - target: Application
+      - target: Infrastructure
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.paypay.PayPayTests
       SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) $(SWIFT_ACTIVE_COMPILATION_CONDITIONS_$(PLATFORM_NAME))"
@@ -66,6 +94,9 @@ schemes:
     build:
       targets:
         PayPay: all
+        Domain: all
+        Application: all
+        Infrastructure: all
     run:
       config: Debug
     test:
