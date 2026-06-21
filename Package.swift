@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "PayPay",
     platforms: [
-        .iOS(.v16_2),
+        .iOS(.v17),
         .macOS(.v13)
     ],
     products: [
