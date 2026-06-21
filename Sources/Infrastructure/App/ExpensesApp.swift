@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -56,3 +57,4 @@ public struct ExpensesApp: App {
         )
     }
 }
+#endif

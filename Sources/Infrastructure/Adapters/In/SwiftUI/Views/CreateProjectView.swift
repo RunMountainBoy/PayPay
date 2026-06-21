@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 
@@ -105,3 +106,4 @@ public struct CreateProjectView: View {
         participants.removeAll { $0.id == participant.id }
     }
 }
+#endif
