@@ -2,6 +2,7 @@
 import SwiftUI
 import Domain
 import Application
+import Infrastructure
 
 @main
 public struct ExpensesApp: App {
