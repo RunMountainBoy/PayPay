@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import Combine
 import Domain
@@ -11,13 +12,19 @@ public final class ProjectListViewModel: ObservableObject {
 
     private let listProjectsUseCase: ListProjectsUseCase
     private let createProjectUseCase: CreateProjectUseCase
+    public let projectRepository: ProjectRepositoryProtocol
+    public let debtSimplifier: DebtSimplifier
 
     public init(
         listProjectsUseCase: ListProjectsUseCase,
-        createProjectUseCase: CreateProjectUseCase
+        createProjectUseCase: CreateProjectUseCase,
+        projectRepository: ProjectRepositoryProtocol,
+        debtSimplifier: DebtSimplifier
     ) {
         self.listProjectsUseCase = listProjectsUseCase
         self.createProjectUseCase = createProjectUseCase
+        self.projectRepository = projectRepository
+        self.debtSimplifier = debtSimplifier
     }
 
     public func fetchProjects() {
@@ -47,3 +54,4 @@ public final class ProjectListViewModel: ObservableObject {
         }
     }
 }
+#endif

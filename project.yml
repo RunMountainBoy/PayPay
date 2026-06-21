@@ -1,0 +1,112 @@
+name: PayPay
+options:
+  bundleIdPrefix: com.paypay
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "17.0"
+  groupSortPosition: bottom
+  generateEmptyDirectories: true
+  developmentLanguage: en
+  minimumXcodeGenVersion: "2.0.0"
+
+targets:
+  Domain:
+    type: framework
+    platform: iOS
+    sources:
+      - Sources/Domain
+
+  Application:
+    type: framework
+    platform: iOS
+    sources:
+      - Sources/Application
+    dependencies:
+      - target: Domain
+
+  Infrastructure:
+    type: framework
+    platform: iOS
+    sources:
+      - path: Sources/Infrastructure
+        excludes:
+          - App
+          - Adapters/In/SwiftUI
+    dependencies:
+      - target: Application
+
+  PayPay:
+    type: application
+    platform: iOS
+    sources:
+      - Sources/Infrastructure/App
+      - Sources/Infrastructure/Adapters/In/SwiftUI
+    dependencies:
+      - target: Infrastructure
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.paypay.app
+      CODE_SIGN_STYLE: Automatic
+      DEVELOPMENT_TEAM: ""
+      ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+      INFOPLIST_KEY_CFBundleDisplayName: PayPay
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) $(SWIFT_ACTIVE_COMPILATION_CONDITIONS_$(PLATFORM_NAME))"
+    info:
+      path: Sources/Infrastructure/App/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: 1.0
+        CFBundleVersion: 1
+        LSRequiresIPhoneOS: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen: {}
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+  PayPayTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: Domain
+      - target: Application
+      - target: Infrastructure
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.paypay.PayPayTests
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) $(SWIFT_ACTIVE_COMPILATION_CONDITIONS_$(PLATFORM_NAME))"
+
+schemes:
+  PayPay:
+    build:
+      targets:
+        PayPay: all
+        Domain: all
+        Application: all
+        Infrastructure: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - PayPayTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

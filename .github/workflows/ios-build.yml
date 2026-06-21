@@ -1,0 +1,76 @@
+name: Compilar App de iOS
+
+on:
+  push:
+    branches: [ "develop", "main" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Descargar repositorio
+      uses: actions/checkout@v4
+
+    - name: Mostrar versiones
+      run: |
+        xcodebuild -version
+        swift --version
+
+    - name: Instalar xcodegen
+      run: brew install xcodegen
+
+    - name: Generar proyecto Xcode con xcodegen
+      run: xcodegen generate --spec project.yml
+
+    - name: Ejecutar tests
+      run: |
+        xcodebuild test \
+                   -project "PayPay.xcodeproj" \
+                   -scheme "PayPay" \
+                   -sdk iphonesimulator \
+                   -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=latest' \
+                   -derivedDataPath build \
+                   -enableCodeCoverage YES \
+                   CODE_SIGNING_ALLOWED=NO
+
+    - name: Compilar para Simulador (para Appetize.io)
+      run: |
+        xcodebuild -project "PayPay.xcodeproj" \
+                   -scheme "PayPay" \
+                   -sdk iphonesimulator \
+                   -configuration Debug \
+                   -derivedDataPath build-sim \
+                   CODE_SIGNING_ALLOWED=NO \
+                   clean build
+
+    - name: Compilar para Dispositivo Real (Release)
+      run: |
+        xcodebuild -project "PayPay.xcodeproj" \
+                   -scheme "PayPay" \
+                   -sdk iphoneos \
+                   -configuration Release \
+                   -derivedDataPath build-device \
+                   CODE_SIGNING_ALLOWED=NO \
+                   clean build
+
+    - name: Ubicar archivos compilados
+      run: |
+        find build-sim -name "*.app"
+        find build-device -name "*.app"
+
+    - name: Subir build de Simulador (para Appetize.io)
+      uses: actions/upload-artifact@v4
+      with:
+        name: App-Simulador
+        path: build-sim/Build/Products/Debug-iphonesimulator/
+        retention-days: 30
+
+    - name: Subir build de Dispositivo Real (Release)
+      uses: actions/upload-artifact@v4
+      with:
+        name: App-Compilada
+        path: build-device/Build/Products/Release-iphoneos/
+        retention-days: 30
