@@ -1,3 +1,4 @@
+#if os(iOS)
 import Foundation
 import Combine
 import Domain
@@ -47,3 +48,4 @@ public final class ProjectListViewModel: ObservableObject {
         }
     }
 }
+#endif

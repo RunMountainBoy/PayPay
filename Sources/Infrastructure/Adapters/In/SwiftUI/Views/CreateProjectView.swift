@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 
@@ -26,10 +27,8 @@ public struct CreateProjectView: View {
                 Section {
                     TextField("Name", text: $participantName)
                     TextField("Email", text: $participantEmail)
-#if os(iOS)
                         .keyboardType(.emailAddress)
                         .textInputAutocapitalization(.never)
-#endif
                     
                     Button {
                         addParticipant()
@@ -73,9 +72,7 @@ public struct CreateProjectView: View {
                 }
             }
             .navigationTitle("New Project")
-#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
@@ -109,3 +106,4 @@ public struct CreateProjectView: View {
         participants.removeAll { $0.id == participant.id }
     }
 }
+#endif
