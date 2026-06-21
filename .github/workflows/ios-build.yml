@@ -31,7 +31,7 @@ jobs:
                    -project "PayPay.xcodeproj" \
                    -scheme "PayPay" \
                    -sdk iphonesimulator \
-                   -destination 'generic/platform=iOS Simulator' \
+                   -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=latest' \
                    -derivedDataPath build \
                    -enableCodeCoverage YES \
                    CODE_SIGNING_ALLOWED=NO
