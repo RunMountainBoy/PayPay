@@ -13,7 +13,11 @@ public struct ProjectListView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
+#if os(iOS)
                 Color(uiColor: .systemGroupedBackground)
+#else
+                Color(nsColor: .windowBackgroundColor)
+#endif
                     .ignoresSafeArea()
 
                 VStack {
@@ -28,7 +32,7 @@ public struct ProjectListView: View {
                 }
                 .navigationTitle("PayPay")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .primaryAction) {
                         Button {
                             showingCreateProject = true
                         } label: {
