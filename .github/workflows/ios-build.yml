@@ -21,6 +21,7 @@ jobs:
 
     - name: Configurar versión de Xcode
       run: |
+        sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
         xcodebuild -version
 
     - name: Compilar paquete Swift
@@ -29,13 +30,16 @@ jobs:
     - name: Ejecutar tests
       run: swift test
 
-    - name: Generar proyecto Xcode
-      run: swift package generate-xcodeproj
+    - name: Instalar xcodegen
+      run: brew install xcodegen
+
+    - name: Generar proyecto Xcode con xcodegen
+      run: xcodegen generate --spec project.yml
 
     - name: Compilar el proyecto de iOS
       run: |
         xcodebuild -project "PayPay.xcodeproj" \
-                   -scheme "PayPay-Package" \
+                   -scheme "PayPay" \
                    -sdk iphoneos \
                    -configuration Release \
                    -derivedDataPath build \

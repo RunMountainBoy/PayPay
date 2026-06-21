@@ -1,4 +1,3 @@
-#if os(iOS)
 import SwiftUI
 import Domain
 
@@ -19,7 +18,7 @@ public struct CreateProjectView: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Project Name (e.g. Europe Trip)", text: $projectName)
+                    TextField("Project Name (e.g. Europe Trip", text: $projectName)
                 } header: {
                     Text("Project Info")
                 }
@@ -106,4 +105,3 @@ public struct CreateProjectView: View {
         participants.removeAll { $0.id == participant.id }
     }
 }
-#endif

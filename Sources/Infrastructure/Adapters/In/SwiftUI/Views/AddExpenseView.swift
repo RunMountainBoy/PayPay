@@ -1,4 +1,3 @@
-#if os(iOS)
 import SwiftUI
 import Domain
 
@@ -221,4 +220,3 @@ public struct AddExpenseView: View {
         dismiss()
     }
 }
-#endif

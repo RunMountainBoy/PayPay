@@ -1,0 +1,77 @@
+name: PayPay
+options:
+  bundleIdPrefix: com.paypay
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "16.0"
+  groupSortPosition: bottom
+  generateEmptyDirectories: true
+  developmentLanguage: en
+
+targets:
+  PayPay:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+      - path: Sources/Domain
+      - path: Sources/Application
+      - path: Sources/Infrastructure
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.paypay.app
+      CODE_SIGN_STYLE: Automatic
+      DEVELOPMENT_TEAM: ""
+      ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+      INFOPLIST_KEY_CFBundleDisplayName: PayPay
+      INFOPLIST_KEY_UILaunchStoryboardName: LaunchScreen
+    info:
+      path: Sources/Infrastructure/App/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: $(DEVELOPMENT_LANGUAGE)
+        CFBundleExecutable: $(EXECUTABLE_NAME)
+        CFBundleIdentifier: $(PRODUCT_BUNDLE_IDENTIFIER)
+        CFBundleInfoDictionaryVersion: "6.0"
+        CFBundleName: $(PRODUCT_NAME)
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: 1.0
+        CFBundleVersion: 1
+        LSRequiresIPhoneOS: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchScreen:
+          UIColorName: ""
+          UIImageName: ""
+        UILaunchStoryboardName: LaunchScreen
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+schemes:
+  PayPay:
+    build:
+      targets:
+        PayPay: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release

@@ -1,4 +1,3 @@
-#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -14,10 +13,8 @@ public struct ProjectListView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
-                Group {
-                    Color(uiColor: .systemGroupedBackground)
-                }
-                .ignoresSafeArea()
+                Color(uiColor: .systemGroupedBackground)
+                    .ignoresSafeArea()
 
                 VStack {
                     if viewModel.isLoading && viewModel.projects.isEmpty {
@@ -123,9 +120,7 @@ public struct ProjectListView: View {
             }
         }
         .navigationDestination(for: Project.self) { project in
-            let repo = InMemoryProjectRepository()
-            let simplifier = DebtSimplifier()
-            let useCase = ExpenseUseCaseImpl(projectRepository: repo, debtSimplifier: simplifier)
+            let useCase = ExpenseUseCaseImpl(projectRepository: viewModel.projectRepository, debtSimplifier: viewModel.debtSimplifier)
             let detailVM = ProjectViewModel(
                 project: project,
                 addExpenseUseCase: useCase,
@@ -135,4 +130,3 @@ public struct ProjectListView: View {
         }
     }
 }
-#endif
