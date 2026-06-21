@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 
@@ -58,12 +59,10 @@ public struct AddExpenseView: View {
                 }
             }
             .navigationTitle("Añadir Gasto")
-#if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(slateDark, for: .navigationBar)
-#endif
             .toolbar {
                 toolbarItems
             }
@@ -103,9 +102,7 @@ public struct AddExpenseView: View {
                     .foregroundColor(cyanNeon)
                     .bold()
                 TextField("0.00", text: $amountString)
-#if os(iOS)
                     .keyboardType(.decimalPad)
-#endif
                     .foregroundColor(cyanNeon)
                     .font(.system(.body, design: .monospaced))
                     .monospacedDigit()
@@ -224,3 +221,4 @@ public struct AddExpenseView: View {
         dismiss()
     }
 }
+#endif

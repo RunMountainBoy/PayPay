@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -14,11 +15,7 @@ public struct ProjectListView: View {
         NavigationStack {
             ZStack {
                 Group {
-#if os(iOS)
                     Color(uiColor: .systemGroupedBackground)
-#else
-                    Color(nsColor: .windowBackgroundColor)
-#endif
                 }
                 .ignoresSafeArea()
 
@@ -138,3 +135,4 @@ public struct ProjectListView: View {
         }
     }
 }
+#endif

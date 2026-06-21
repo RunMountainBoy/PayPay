@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -102,12 +103,10 @@ public struct ProjectDashboardView: View {
             }
         }
         .navigationTitle(viewModel.project.name)
-#if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(slateDark, for: .navigationBar)
-#endif
         .sheet(isPresented: $showingAddExpenseSheet) {
             AddExpenseView(participants: viewModel.project.participants) { description, amount, paidBy, splits in
                 viewModel.addExpense(description: description, amount: amount, paidBy: paidBy, splits: splits)
@@ -253,3 +252,4 @@ public struct ProjectDashboardView: View {
         }
     }
 }
+#endif
