@@ -4,6 +4,8 @@ import Application
 
 @main
 public struct ExpensesApp: App {
+    public init() {}
+    
     // Singletons in memory during execution
     private let projectRepository = InMemoryProjectRepository()
     private let debtSimplifier = DebtSimplifier()
