@@ -7,19 +7,23 @@ options:
   groupSortPosition: bottom
   generateEmptyDirectories: true
   developmentLanguage: en
+  minimumXcodeGenVersion: "2.0.0"
 
 targets:
   PayPay:
     type: application
     platform: iOS
     sources:
-      - path: Sources
+      - Sources/Domain
+      - Sources/Application
+      - Sources/Infrastructure
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.paypay.app
       CODE_SIGN_STYLE: Automatic
       DEVELOPMENT_TEAM: ""
       ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
       INFOPLIST_KEY_CFBundleDisplayName: PayPay
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) $(SWIFT_ACTIVE_COMPILATION_CONDITIONS_$(PLATFORM_NAME))"
     info:
       path: Sources/Infrastructure/App/Info.plist
       properties:
@@ -46,6 +50,17 @@ targets:
           - UIInterfaceOrientationLandscapeLeft
           - UIInterfaceOrientationLandscapeRight
 
+  PayPayTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: PayPay
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.paypay.PayPayTests
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) $(SWIFT_ACTIVE_COMPILATION_CONDITIONS_$(PLATFORM_NAME))"
+
 schemes:
   PayPay:
     build:
@@ -56,6 +71,8 @@ schemes:
     test:
       config: Debug
       gatherCoverageData: true
+      targets:
+        - PayPayTests
     profile:
       config: Release
     analyze:
