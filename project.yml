@@ -3,7 +3,7 @@ options:
   bundleIdPrefix: com.paypay
   createIntermediateGroups: true
   deploymentTarget:
-    iOS: "16.2"
+    iOS: "17.0"
   groupSortPosition: bottom
   generateEmptyDirectories: true
   developmentLanguage: en
