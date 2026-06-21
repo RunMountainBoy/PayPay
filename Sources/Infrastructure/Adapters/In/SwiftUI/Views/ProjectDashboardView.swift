@@ -1,4 +1,3 @@
-#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -252,4 +251,3 @@ public struct ProjectDashboardView: View {
         }
     }
 }
-#endif
