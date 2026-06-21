@@ -36,23 +36,41 @@ jobs:
                    -enableCodeCoverage YES \
                    CODE_SIGNING_ALLOWED=NO
 
-    - name: Compilar el proyecto de iOS
+    - name: Compilar para Simulador (para Appetize.io)
+      run: |
+        xcodebuild -project "PayPay.xcodeproj" \
+                   -scheme "PayPay" \
+                   -sdk iphonesimulator \
+                   -configuration Debug \
+                   -derivedDataPath build-sim \
+                   CODE_SIGNING_ALLOWED=NO \
+                   clean build
+
+    - name: Compilar para Dispositivo Real (Release)
       run: |
         xcodebuild -project "PayPay.xcodeproj" \
                    -scheme "PayPay" \
                    -sdk iphoneos \
                    -configuration Release \
-                   -derivedDataPath build \
+                   -derivedDataPath build-device \
                    CODE_SIGNING_ALLOWED=NO \
                    clean build
 
     - name: Ubicar archivos compilados
       run: |
-        find build -name "*.app" -o -name "*.ipa"
+        find build-sim -name "*.app"
+        find build-device -name "*.app"
 
-    - name: Subir ejecutable compilado
+    - name: Subir build de Simulador (para Appetize.io)
+      uses: actions/upload-artifact@v4
+      with:
+        name: App-Simulador
+        path: build-sim/Build/Products/Debug-iphonesimulator/
+        retention-days: 30
+
+    - name: Subir build de Dispositivo Real (Release)
       uses: actions/upload-artifact@v4
       with:
         name: App-Compilada
-        path: build/Build/Products/Release-iphoneos/
+        path: build-device/Build/Products/Release-iphoneos/
         retention-days: 30
