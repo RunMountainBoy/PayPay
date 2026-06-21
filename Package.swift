@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "PayPay",
     platforms: [
-        .iOS(.v16),
+        .iOS(.v17),
         .macOS(.v13)
     ],
     products: [
@@ -26,7 +26,11 @@ let package = Package(
         .target(
             name: "Infrastructure",
             dependencies: ["Application"],
-            path: "Sources/Infrastructure"
+            path: "Sources/Infrastructure",
+            exclude: [
+                "App", // Exclude ExpensesApp.swift, Info.plist
+                "Adapters/In/SwiftUI" // Exclude all SwiftUI views and viewmodels
+            ]
         ),
         .testTarget(
             name: "DomainTests",

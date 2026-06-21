@@ -1,34 +1,36 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 import Application
+import Infrastructure
 
 @main
 public struct ExpensesApp: App {
+    public init() {}
+    
     // Singletons in memory during execution
     private let projectRepository = InMemoryProjectRepository()
     private let debtSimplifier = DebtSimplifier()
 
-    public init() {
-        let mockProject = Self.createMockProject()
-        // Seed the repository with the mock project on startup
-        Task {
-            try? await projectRepository.saveProject(mockProject)
-        }
-    }
-
     public var body: some Scene {
         WindowGroup {
-            let initialProject = Self.createMockProject()
-            ProjectDashboardView(viewModel: ProjectViewModel(
-                project: initialProject,
-                repository: projectRepository,
-                simplifier: debtSimplifier
-            ))
-            .preferredColorScheme(.dark) // Force dark mode for 'Neo-Finance' style
+            let manageProjectUseCase = ManageProjectUseCaseImpl(projectRepository: projectRepository)
+            let listViewModel = ProjectListViewModel(
+                listProjectsUseCase: manageProjectUseCase,
+                createProjectUseCase: manageProjectUseCase,
+                projectRepository: projectRepository,
+                debtSimplifier: debtSimplifier
+            )
+            ProjectListView(viewModel: listViewModel)
+                .preferredColorScheme(.dark)
+                .task { @MainActor in
+                    // Seed the repository with a mock project on startup
+                    let mockProject = Self.createMockProject()
+                    try? await projectRepository.saveProject(mockProject)
+                }
         }
     }
 
-    // Helper to generate a default mock project for demo and testing purposes
     private static func createMockProject() -> Project {
         let alice = Participant(id: "A", name: "Alice", email: "alice@example.com")
         let bob = Participant(id: "B", name: "Bob", email: "bob@example.com")
@@ -56,3 +58,4 @@ public struct ExpensesApp: App {
         )
     }
 }
+#endif

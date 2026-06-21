@@ -1,3 +1,4 @@
+#if os(iOS)
 import SwiftUI
 import Domain
 import Application
@@ -28,7 +29,7 @@ public struct ProjectListView: View {
                 }
                 .navigationTitle("PayPay")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(placement: .primaryAction) {
                         Button {
                             showingCreateProject = true
                         } label: {
@@ -120,9 +121,7 @@ public struct ProjectListView: View {
             }
         }
         .navigationDestination(for: Project.self) { project in
-            let repo = InMemoryProjectRepository()
-            let simplifier = DebtSimplifier()
-            let useCase = ExpenseUseCaseImpl(projectRepository: repo, debtSimplifier: simplifier)
+            let useCase = ExpenseUseCaseImpl(projectRepository: viewModel.projectRepository, debtSimplifier: viewModel.debtSimplifier)
             let detailVM = ProjectViewModel(
                 project: project,
                 addExpenseUseCase: useCase,
@@ -132,3 +131,4 @@ public struct ProjectListView: View {
         }
     }
 }
+#endif
