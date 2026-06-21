@@ -5,17 +5,8 @@ import Application
 @main
 public struct ExpensesApp: App {
     // Singletons in memory during execution
-    @MainActor
     private let projectRepository = InMemoryProjectRepository()
     private let debtSimplifier = DebtSimplifier()
-
-    public init() {
-        let mockProject = Self.createMockProject()
-        // Seed the repository with the mock project on startup
-        Task { @MainActor in
-            try? await projectRepository.saveProject(mockProject)
-        }
-    }
 
     public var body: some Scene {
         WindowGroup {
@@ -26,6 +17,9 @@ public struct ExpensesApp: App {
                 simplifier: debtSimplifier
             ))
             .preferredColorScheme(.dark) // Force dark mode for 'Neo-Finance' style
+            .task { @MainActor in
+                try? await projectRepository.saveProject(initialProject)
+            }
         }
     }
 
