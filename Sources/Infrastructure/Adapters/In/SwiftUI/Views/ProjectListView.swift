@@ -13,12 +13,14 @@ public struct ProjectListView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
+                Group {
 #if os(iOS)
-                Color(uiColor: .systemGroupedBackground)
+                    Color(uiColor: .systemGroupedBackground)
 #else
-                Color(nsColor: .windowBackgroundColor)
+                    Color(nsColor: .windowBackgroundColor)
 #endif
-                    .ignoresSafeArea()
+                }
+                .ignoresSafeArea()
 
                 VStack {
                     if viewModel.isLoading && viewModel.projects.isEmpty {
